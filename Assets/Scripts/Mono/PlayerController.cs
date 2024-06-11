@@ -23,7 +23,13 @@ public class PlayerController : MonoBehaviour
     public int LV
     {
         get => Lv;
-        set => Lv = value;
+        set
+        {
+            Lv = value;
+            // 因为等级导致的初始化数据
+            SharedData.gameShareData.Data.spawnInterval = 10f / Lv * SpawnMonsterIntervalMultiply;
+            SharedData.gameShareData.Data.spawnCount = (int)(Lv * 5 * SpawnMonsterQuantityMultiply);
+        }
     }
 
     public float SpawnMonsterIntervalMultiply = 1;//怪物间隔
@@ -50,6 +56,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         LV = Lv; // 为了初始化
+        CheckPositionRange();//一开始就同步一次玩家位置，如果不同步敌人的坐标会为负
     }
 
     private void Start()
@@ -95,6 +102,7 @@ public class PlayerController : MonoBehaviour
         pos.y = Mathf.Clamp(pos.y, MoveRangeY.x, MoveRangeY.y);
         pos.z = pos.y;
         transform.position = pos;
+        SharedData.playerPos.Data = (Vector2)transform.position; //共享数据中保存玩家位置数据
     }
 
     /// <summary>

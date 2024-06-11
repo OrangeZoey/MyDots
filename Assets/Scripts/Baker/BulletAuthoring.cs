@@ -12,15 +12,21 @@ public class BulletAuthoring : MonoBehaviour
         {
             Entity entity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent<RendererSortTag>(entity); //添加排序组件
+            SetComponentEnabled<RendererSortTag>(entity, true);
+
             AddComponent<BulletData>(entity, new BulletData()
             {
                 destroyTimer = authoring.destroyTime
             });
-            SetComponentEnabled<RendererSortTag>(entity, true);//设置状态
+            SetComponentEnabled<BulletData>(entity, true);//设置状态
+
+            Vector2 colliderSize = authoring.GetComponent<BoxCollider2D>().size / 2;//碰撞器的一半
             AddSharedComponent<BulletSharedData>(entity, new BulletSharedData()//添加共享组件
             {
                 moveSpeed = authoring.moveSpeed,
-                destroyTime = authoring.destroyTime
+                destroyTime = authoring.destroyTime,
+                colliderOffset = authoring.GetComponent<BoxCollider2D>().offset,
+                colliderHalfExtents = new Unity.Mathematics.float3(colliderSize.x, colliderSize.y, 10000),
             });
         }
     }

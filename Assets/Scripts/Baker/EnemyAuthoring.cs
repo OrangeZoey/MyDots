@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class EnemyAuthoring : MonoBehaviour
 {
-    public Vector3 scale = Vector3.one; //缩放
+    //public Vector3 scale = Vector3.one; //缩放
     public float moveSpeed = 4; //移动速度
     public class EnemyBaker : Baker<EnemyAuthoring>
     {
@@ -17,6 +17,15 @@ public class EnemyAuthoring : MonoBehaviour
             AddComponent<RendererSortTag>(entity);
             //设置组件状态
             SetComponentEnabled<RendererSortTag>(entity, true);
+
+            AddComponent<EnemyData>(entity, new EnemyData() { die = false });
+            SetComponentEnabled<EnemyData>(entity, true);
+
+            AddSharedComponent<EnemySharedData>(entity, new EnemySharedData()
+            {
+                moveSpeed = authoring.moveSpeed,
+                scale=(Vector2)authoring.transform.localScale
+            }) ;
         }
     }
 }
