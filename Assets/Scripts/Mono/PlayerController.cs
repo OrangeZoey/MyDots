@@ -158,5 +158,7 @@ public class PlayerController : MonoBehaviour
                 rotation = GunRoot.rotation * Quaternion.Euler(0, 0, -angleStep * i),
             });
         }
+
+        Debug.Log(buffer.Length);
     }
 }

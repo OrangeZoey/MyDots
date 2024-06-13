@@ -15,9 +15,12 @@ public partial struct BulletSystem : ISystem
     }
     public void OnUpdate(ref SystemState state)
     {
+        //从 EndSimulationEntityCommandBufferSystem 的单例中获取一个 EntityCommandBuffer，
+        //然后将其转换为 ParallelWriter 类型，以便可以并行地写入命令，最后将这个 ParallelWriter 赋值给 ecb 变量。
         EntityCommandBuffer.ParallelWriter ecb = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter();
 
-        DynamicBuffer<BulletCreateInfo> bulletCreateInfoBuffer = SystemAPI.GetSingletonBuffer<BulletCreateInfo>();
+        //获取  BulletCreateInfo 的缓存区域大小
+        DynamicBuffer<BulletCreateInfo> bulletCreateInfoBuffer = SystemAPI.GetSingletonBuffer<BulletCreateInfo>();      
         createBulletCount.Data = bulletCreateInfoBuffer.Length;
         new BulletJob()
         {
@@ -49,11 +52,11 @@ public partial struct BulletSystem : ISystem
                     Scale = 1
                 });
             }
-            newBullets.Dispose();         
+            newBullets.Dispose();
         }
         //清除掉 不然下次还在
         bulletCreateInfoBuffer.Clear();
-      
+
     }
 
     [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)] //忽略组件的启用状态
@@ -128,13 +131,13 @@ public partial struct BulletSystem : ISystem
                     //判断碰撞到的有无 EnemyData
                     //if (enemyLookUp.HasComponent(temp))
                     //{
-                        //销毁
-                        bulletData.destroyTimer = 0;
-                        //设置数据
-                        ecb.SetComponent<EnemyData>(temp.Index, temp, new EnemyData()
-                        {
-                            die = true,
-                        });
+                    //销毁
+                    bulletData.destroyTimer = 0;
+                    //设置数据
+                    ecb.SetComponent<EnemyData>(temp.Index, temp, new EnemyData()
+                    {
+                        die = true,
+                    });
                     //}
                 }
             }

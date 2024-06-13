@@ -12,6 +12,6 @@ public partial struct MyTestSystem : ISystem
 
     public void OnUpdate(ref SystemState state)
     {
-        Debug.Log("state.DebugName£º" + state.World);
+        Debug.Log("state.WorldUnmanaged£º" + state.WorldUnmanaged);
     }
 }
